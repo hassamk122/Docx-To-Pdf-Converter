@@ -5,6 +5,11 @@ const path = require('path');
 const fs = require('fs');
 
 
+function serveMainPage(req, res) {
+  const filePath = path.resolve(__dirname, '../views/index.html');
+  res.sendFile(filePath);
+}
+
 async function convertDocxtopdf(req, res) {
   try {
 
