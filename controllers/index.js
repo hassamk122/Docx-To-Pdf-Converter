@@ -1,5 +1,5 @@
 
-const docxtopdf = require('docx-pdf');
+const convertToPdf = require("docx-pdf-converter");
 const path = require('path');
 const fs = require('fs');
 
@@ -10,20 +10,18 @@ function serveMainPage(req, res) {
 }
 
 function convertDocxtopdf(req, res) {
-    const inputFilePath = path.resolve(req.file.path); // absolute path
-    const outputFilePath = path.resolve(`${Date.now()}-output.pdf`);
+  const outputFilePath = `${Date.now()}-output.pdf`;
 
-    docxtopdf(inputFilePath, outputFilePath, (error) => {
-        if (error) {
-            console.error('Conversion error:', error);
-            return res.status(500).json({ error: "Failed to convert file" });
-        }
-
-        fs.unlink(inputFilePath, () => {});
-
-        res.download(outputFilePath, () => {
-            fs.unlink(outputFilePath, () => {});
-        });
+  convertToPdf(req.file.path, outputFilePath)
+    .then(() => {
+      res.download(outputFilePath, () => {
+        fs.unlink(req.file.path, () => {});
+        fs.unlink(outputFilePath, () => {});
+      });
+    })
+    .catch(err => {
+      console.error("Conversion failed:", err);
+      res.status(500).json({ error: "Failed to convert file" });
     });
 }
 

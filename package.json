@@ -14,6 +14,7 @@
   "dependencies": {
     "body-parser": "^2.2.0",
     "docx-pdf": "^0.0.1",
+    "docx-pdf-converter": "^1.2.2",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "multer": "^2.0.2"
