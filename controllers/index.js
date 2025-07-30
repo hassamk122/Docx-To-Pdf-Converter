@@ -4,12 +4,9 @@ const path = require('path');
 const fs = require('fs');
 
 
-
-function serveMainPage(request,response){
-
-  const filePath = path.join(__dirname, '../views/index.html'); 
-  response.sendFile(filePath);
-
+function serveMainPage(req, res) {
+  const filePath = path.resolve(__dirname, '../views/index.html');
+  res.sendFile(filePath);
 }
 
 function convertDocxtopdf(request,response){
