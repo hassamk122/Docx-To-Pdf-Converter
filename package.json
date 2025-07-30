@@ -17,6 +17,8 @@
     "docx-pdf-converter": "^1.2.2",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
+    "html-pdf-node": "^1.0.8",
+    "mammoth": "^1.9.1",
     "multer": "^2.0.2"
   }
 }

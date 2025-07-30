@@ -1,28 +1,33 @@
 
-const { convertToPdf } = require("docx-pdf-converter");
+const mammoth = require('mammoth');
+const html_to_pdf = require('html-pdf-node');
 const path = require('path');
 const fs = require('fs');
 
 
-function serveMainPage(req, res) {
-  const filePath = path.resolve(__dirname, '../views/index.html');
-  res.sendFile(filePath);
-}
+async function convertDocxtopdf(req, res) {
+  try {
 
-function convertDocxtopdf(req, res) {
-  const outputFilePath = `${Date.now()}-output.pdf`;
+    const result = await mammoth.extractRawText({ path: req.file.path });
+    const html = `<html><body><pre>${result.value}</pre></body></html>`;
 
-  convertToPdf(req.file.path, outputFilePath)
-    .then(() => {
-      res.download(outputFilePath, () => {
-        fs.unlink(req.file.path, () => {});
-        fs.unlink(outputFilePath, () => {});
-      });
-    })
-    .catch(err => {
-      console.error("Conversion failed:", err);
-      res.status(500).json({ error: "Failed to convert file" });
+
+    const file = { content: html };
+    const pdfBuffer = await html_to_pdf.generatePdf(file, { format: 'A4' });
+
+
+    fs.unlink(req.file.path, () => {});
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="${Date.now()}-output.pdf"`,
     });
+    res.send(pdfBuffer);
+
+  } catch (error) {
+    console.error('Conversion failed:', error);
+    res.status(500).json({ error: 'Failed to convert file' });
+  }
 }
 
 module.exports = {
