@@ -9,22 +9,21 @@ function serveMainPage(req, res) {
   res.sendFile(filePath);
 }
 
-function convertDocxtopdf(request,response){
+function convertDocxtopdf(req, res) {
+    const inputFilePath = path.resolve(req.file.path); // absolute path
+    const outputFilePath = path.resolve(`${Date.now()}-output.pdf`);
 
-    const outputFilePath = `${Date.now()}-output.pdf`;
-
-    docxtopdf(request.file.path,outputFilePath,(error)=>{
-
-        if(error){
-            console.log('error',err);
-            return response.status(500).json({error:"Failed to Covert file"});
+    docxtopdf(inputFilePath, outputFilePath, (error) => {
+        if (error) {
+            console.error('Conversion error:', error);
+            return res.status(500).json({ error: "Failed to convert file" });
         }
 
-        fs.unlink(request.file.path, () => {});
+        fs.unlink(inputFilePath, () => {});
 
-        response.download(outputFilePath,()=>{
-            fs.unlink(outputFilePath,()=>{})
-        })
+        res.download(outputFilePath, () => {
+            fs.unlink(outputFilePath, () => {});
+        });
     });
 }
 
