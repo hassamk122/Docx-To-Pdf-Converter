@@ -1,5 +1,5 @@
 
-const convertToPdf = require("docx-pdf-converter");
+const { convertToPdf } = require("docx-pdf-converter");
 const path = require('path');
 const fs = require('fs');
 
