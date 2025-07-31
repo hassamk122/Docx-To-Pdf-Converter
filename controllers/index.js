@@ -1,5 +1,5 @@
 
-const docxtopdf = require('docx-pdf');
+const {docxtopdf} = require('docx-pdf');
 const path = require('path');
 const fs = require('fs');
 
